@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Happy Birthday</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: linear-gradient(to top, #ffe0f0, #ffffff);
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      text-align: center;
+      overflow: hidden;
+      position: relative;
+      height: 100vh;
+    }
+
+    #celebrate-btn {
+      padding: 20px 40px; /* Increased padding for a larger button */
+      font-size: 1.8em; /* Increased font size */
+      border: none;
+      background-color: #ff69b4;
+      color: white;
+      border-radius: 12px; /* Slightly more rounded corners */
+      cursor: pointer;
+      margin-top: 20px;
+      position: relative;
+      z-index: 5;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      transition: transform 0.2s ease;
+      font-family: Arial, sans-serif; /* Changed font to Arial */
+    }
+
+    #celebrate-btn:hover {
+      transform: scale(1.1);
+    }
+
+    #message {
+      font-size: 3em;
+      font-weight: bold;
+      color: #ff1493;
+      margin-top: 40px;
+      display: none;
+      animation: bounce 1s infinite alternate;
+      font-family: 'Brush Script MT', cursive; /* Apply Brush Script MT font */
+    }
+
+    @keyframes bounce {
+      from {
+        transform: scale(1);
+      }
+      to {
+        transform: scale(1.15);
+      }
+    }
+
+    #modern-text {
+      font-size: 1.8em;
+      color: #333;
+      margin-top: 20px;
+      display: none;
+      padding: 0 20px;
+      font-family: 'Brush Script MT', cursive; /* Apply Brush Script MT font */
+    }
+
+    canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    .balloon {
+      position: absolute;
+      width: 40px;
+      height: 60px;
+      border-radius: 50% 50% 45% 45%;
+      animation: floatUp linear infinite;
+      z-index: 2;
+    }
+
+    @keyframes floatUp {
+      from {
+        transform: translateY(100vh);
+        opacity: 1;
+      }
+      to {
+        transform: translateY(-150px);
+        opacity: 0;
+      }
+    }
+
+    /* Cake styles */
+    #cake {
+      position: absolute;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      text-align: center;
+      z-index: 3;
+      display: none; /* Initially hidden */
+    }
+
+    #candle {
+      width: 20px;
+      height: 60px;
+      background-color: yellow;
+      margin: 0 auto;
+      position: relative;
+    }
+
+    #candle::before {
+      content: '';
+      width: 20px;
+      height: 20px;
+      background-color: orange;
+      border-radius: 50%;
+      position: absolute;
+      top: -20px;
+      left: 0;
+      animation: flicker 0.5s infinite alternate;
+    }
+
+    @keyframes flicker {
+      from {
+        transform: scale(1);
+        opacity: 1;
+      }
+      to {
+        transform: scale(1.2);
+        opacity: 0.8;
+      }
+    }
+
+    #cake-body {
+      width: 300px;
+      height: 150px;
+      background-color: pink;
+      border-radius: 10px;
+      margin-top: 10px;
+      position: relative;
+    }
+
+    #cake-body::before {
+      content: '';
+      width: 280px;
+      height: 30px;
+      background-color: #ff69b4;
+      position: absolute;
+      top: -30px;
+      left: 10px;
+      border-radius: 5px;
+    }
+
+    /* Cream layer with dripping effect */
+    .cream-layer {
+      width: 280px;
+      height: 40px;
+      background-color: #fff;
+      border-radius: 10px;
+      position: absolute;
+      top: 20px;
+      left: 10px;
+      clip-path: polygon(
+        0% 0%, 100% 0%, 100% 70%, 
+        90% 80%, 85% 70%, 75% 90%, 
+        65% 70%, 50% 85%, 40% 70%, 
+        30% 90%, 20% 70%, 10% 85%, 
+        0% 70%
+      );
+    }
+
+    /* Cherries */
+    .cherry {
+      width: 15px;
+      height: 15px;
+      background-color: red;
+      border-radius: 50%;
+      position: absolute;
+    }
+
+    .cherry:nth-child(1) { top: -10px; left: 50px; }
+    .cherry:nth-child(2) { top: -10px; left: 120px; }
+    .cherry:nth-child(3) { top: -10px; left: 190px; }
+    .cherry:nth-child(4) { top: -10px; left: 260px; }
+
+    /* Add sprinkles to the cake */
+    .sprinkle {
+      width: 5px;
+      height: 10px;
+      background-color: #fff;
+      position: absolute;
+      border-radius: 2px;
+      transform: rotate(20deg);
+    }
+
+    .sprinkle:nth-child(1) { top: 30px; left: 60px; background-color: #ff4500; }
+    .sprinkle:nth-child(2) { top: 50px; left: 100px; background-color: #ffa500; }
+    .sprinkle:nth-child(3) { top: 70px; left: 150px; background-color: #9400d3; }
+    .sprinkle:nth-child(4) { top: 40px; left: 200px; background-color: #ff1493; }
+    .sprinkle:nth-child(5) { top: 60px; left: 250px; background-color: #ff69b4; }
+
+    /* Floating stars */
+    .star {
+      position: absolute;
+      width: 10px;
+      height: 10px;
+      background-color: yellow; /* Yellow stars */
+      border-radius: 50%;
+      animation: floatStar 5s linear infinite;
+      opacity: 0.8;
+    }
+
+    @keyframes floatStar {
+      from {
+        transform: translateY(100vh);
+        opacity: 1;
+      }
+      to {
+        transform: translateY(-10vh);
+        opacity: 0.5;
+      }
+    }
+  </style>
+</head>
+<body>
+  <button id="celebrate-btn">Celebrate!</button>
+  
+  <!-- Cake -->
+  <div id="cake">
+    <div id="candle"></div>
+    <div id="cake-body">
+      <!-- Cream Layer -->
+      <div class="cream-layer"></div>
+      <!-- Cherries -->
+      <div class="cherry"></div>
+      <div class="cherry"></div>
+      <div class="cherry"></div>
+      <div class="cherry"></div>
+      <!-- Sprinkles -->
+      <div class="sprinkle"></div>
+      <div class="sprinkle"></div>
+      <div class="sprinkle"></div>
+      <div class="sprinkle"></div>
+      <div class="sprinkle"></div>
+    </div>
+  </div>
+
+  <div id="message">Happy Birthday!</div>
+  <div id="modern-text">Wishing you joy, laughter, and unforgettable memories. Here's to your best year yet!</div>
+  <canvas id="confetti-canvas"></canvas>
+
+  <script>
+    const colors = ['#ff1493', '#ff69b4', '#ff4500', '#ffa500', '#9400d3'];
+    const btn = document.getElementById('celebrate-btn');
+    const message = document.getElementById('message');
+    const modernText = document.getElementById('modern-text');
+    const canvas = document.getElementById('confetti-canvas');
+    const cake = document.getElementById('cake');
+    const ctx = canvas.getContext('2d');
+
+    let confettiRunning = false;
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    window.addEventListener('resize', () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    });
+
+    btn.addEventListener('click', () => {
+      btn.style.display = 'none';
+      message.style.display = 'block';
+      modernText.style.display = 'block';
+      cake.style.display = 'block';
+      confettiRunning = true;
+      launchBalloons(25);
+      startStars(); // Keep stars floating continuously
+    });
+
+    // Confetti Setup
+    class Confetto {
+      constructor() {
+        this.reset();
+      }
+
+      reset() {
+        this.color = colors[Math.floor(Math.random() * colors.length)];
+        this.x = Math.random() * canvas.width;
+        this.y = Math.random() * -canvas.height;
+        this.w = Math.random() * 10 + 5;
+        this.h = Math.random() * 20 + 10;
+        this.vx = (Math.random() - 0.5) * 4;
+        this.vy = Math.random() * 3 + 2;
+        this.rotation = Math.random() * 2 * Math.PI;
+        this.rotationSpeed = (Math.random() - 0.5) * 0.2;
+      }
+
+      update() {
+        this.x += this.vx;
+        this.y += this.vy;
+        this.rotation += this.rotationSpeed;
+        if (this.y > canvas.height) this.reset();
+      }
+
+      draw() {
+        ctx.save();
+        ctx.translate(this.x, this.y);
+        ctx.rotate(this.rotation);
+        ctx.fillStyle = this.color;
+        ctx.fillRect(-this.w / 2, -this.h / 2, this.w, this.h);
+        ctx.restore();
+      }
+    }
+
+    const confetti = Array.from({ length: 100 }, () => new Confetto());
+
+    function render() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      if (confettiRunning) {
+        confetti.forEach(c => {
+          c.update();
+          c.draw();
+        });
+      }
+      requestAnimationFrame(render);
+    }
+
+    render();
+
+    // Balloons
+    function launchBalloons(count) {
+      for (let i = 0; i < count; i++) {
+        const balloon = document.createElement('div');
+        balloon.className = 'balloon';
+        balloon.style.left = `${Math.random() * 100}%`;
+        balloon.style.background = `radial-gradient(circle at 30% 30%, ${colors[i % colors.length]}, #fff)`;
+        balloon.style.animationDuration = `${5 + Math.random() * 5}s`;
+        document.body.appendChild(balloon);
+        setTimeout(() => balloon.remove(), 10000);
+      }
+    }
+
+    // Stars
+    function createStars(count) {
+      for (let i = 0; i < count; i++) {
+        const star = document.createElement('div');
+        star.className = 'star';
+        star.style.left = `${Math.random() * 100}%`;
+        star.style.animationDuration = `${3 + Math.random() * 5}s`;
+        star.style.width = `${5 + Math.random() * 10}px`;
+        star.style.height = star.style.width;
+        document.body.appendChild(star);
+        setTimeout(() => star.remove(), 8000);
+      }
+    }
+
+    function startStars() {
+      setInterval(() => createStars(10), 1000); // Continuously create stars every second
+    }
+  </script>
+</body>
+</html>
