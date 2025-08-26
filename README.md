@@ -15,7 +15,7 @@ It’s a simple webpage where I practiced the basics of structure, tags, and des
 
 ## 🚀 How to View
 1. Download this repository (Code → Download ZIP)
-2. Open the index.html file in any web browser
+2. Open the html file in any web browser
 
 ---
 
